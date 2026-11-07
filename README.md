@@ -9,7 +9,9 @@ Bedacht door kinderen, in code gezet samen met Claude.
 2. **Vertel het aan Claude**, samen met een begeleider. Gewoon in je eigen woorden:
    *"Ik wil twee groene ogen die boos kijken en dan heel snel knipperen."*
 3. **Bekijk het voorbeeld** in de browser. Niet goed? Zeg wat er anders moet.
-4. **Upload** naar het echte paneel (dat doet de begeleider, zie [docs/UPLOADEN.md](docs/UPLOADEN.md)).
+4. **Zet het op het paneel** via de website
+   **[knollebollekes.github.io/LedAnimaties](https://knollebollekes.github.io/LedAnimaties/)**:
+   ESP32 aansluiten, op *Zet op ESP32* klikken, klaar! (Werkt in Chrome of Edge.)
 5. Kijk hoe het straalt op de wagen! 🎉
 
 ## Zelf iets veranderen
@@ -31,14 +33,17 @@ Of maak je eigen kleur met rood, groen en blauw (elk van 0 tot 255): `CRGB(255, 
 | `wagens/` | per carnavalswagen een map met alle animaties van dat jaar |
 | `voorbeelden/` | voorbeelden om van te leren, zoals `oogjes` |
 | `sjabloon/` | het beginpunt voor een nieuwe animatie |
-| `hulpmiddelen/` | testpatroon, controle en het browser-voorbeeld (voor begeleiders) |
+| `hulpmiddelen/` | testpatroon, controle, browser-voorbeeld en de website (voor begeleiders) |
 | `docs/` | uitleg voor begeleiders |
 
-Bij elke animatie hoort een `voorbeeld.html`. Download die en open hem in je browser
-om de animatie te zien, zonder paneel.
+Alle animaties bewegen ook op de [website](https://knollebollekes.github.io/LedAnimaties/),
+zodat je ze kunt bekijken zonder paneel.
 
 ## Voor begeleiders
 
+- De website wordt automatisch gebouwd door GitHub (`.github/workflows/website.yml`)
+  bij elke wijziging op `main`. Alles op `main` komt dus binnen een paar minuten op de site.
+- Handmatig uploaden met de Arduino IDE kan ook: zie [docs/UPLOADEN.md](docs/UPLOADEN.md).
 - Hardware: ESP32 met WS2812B-panelen van 12×12 ledjes, ook meerdere aan elkaar.
 - Hoe de panelen zijn aangesloten staat in `instellingen.h`. Klopt het beeld niet,
   upload dan eerst `hulpmiddelen/testpatroon`.

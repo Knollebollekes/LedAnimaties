@@ -1,8 +1,27 @@
 # Een animatie op de ESP32 zetten
 
-Voor begeleiders. De eerste keer kost dit een half uurtje, daarna een minuut.
+## De makkelijke manier: de website ⭐
 
-## Eén keer: de computer klaarmaken
+Ga in **Chrome of Edge** naar **https://knollebollekes.github.io/LedAnimaties/**
+
+1. Sluit de ESP32 met een USB-kabel aan.
+2. Klik bij een animatie op **Zet op ESP32**.
+3. Kies de ESP32 in het lijstje dat de browser laat zien en klik op **Installeer**.
+
+Geen Arduino IDE nodig. Elke keer dat er nieuwe code in GitHub komt, bouwt GitHub de
+website binnen een paar minuten opnieuw, dus er staat altijd de nieuwste versie op.
+
+Lukt het niet?
+- Verschijnt de ESP32 niet in het lijstje? Probeer een andere USB-kabel (sommige kunnen alleen
+  opladen) of installeer de driver (zie stap 4 hieronder).
+- Blijft hij hangen? Houd het knopje **BOOT** op de ESP32 ingedrukt als het installeren begint.
+- Werkt het in Safari, Firefox of op een telefoon niet? Klopt: die browsers kunnen niet met USB-apparaten praten.
+
+## De handmatige manier: Arduino IDE
+
+Handig als je zelf aan de code wilt sleutelen. De eerste keer kost dit een half uurtje.
+
+### Eén keer: de computer klaarmaken
 
 1. **Arduino IDE installeren**: download versie 2 van [arduino.cc/en/software](https://www.arduino.cc/en/software) en installeer.
 2. **ESP32 toevoegen**:
@@ -14,14 +33,14 @@ Voor begeleiders. De eerste keer kost dit een half uurtje, daarna een minuut.
 4. **Driver** (alleen als de ESP32 straks niet verschijnt): veel ESP32-bordjes hebben een
    CP210x- of CH340-chip. Zoek op "CP210x driver" of "CH340 driver" en installeer die.
 
-## De code op je computer krijgen
+### De code op je computer krijgen
 
 Makkelijkst: ga naar [github.com/Knollebollekes/LedAnimaties](https://github.com/Knollebollekes/LedAnimaties),
 klik op de groene knop **Code → Download ZIP** en pak het uit.
 (Wil je vaker bijwerken? Installeer [GitHub Desktop](https://desktop.github.com) en kies *Clone*.
 Dan is één klik op *Fetch/Pull* genoeg om de nieuwste animaties te krijgen.)
 
-## Elke keer: uploaden
+### Elke keer: uploaden
 
 1. Sluit de ESP32 met een USB-kabel aan op de computer.
    (Let op: sommige kabels kunnen alleen opladen. Werkt het niet, probeer een andere.)

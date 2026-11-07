@@ -1,0 +1,64 @@
+# Bouwt bij elke wijziging op main alle animaties en zet de
+# "zet-op-paneel"-website op GitHub Pages.
+name: Website bouwen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  bouwen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Arduino CLI installeren
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: ESP32 en FastLED klaarzetten (met cache)
+        uses: actions/cache@v4
+        with:
+          path: ~/.arduino15
+          key: arduino-esp32-${{ runner.os }}-v1
+
+      - name: ESP32-boards en FastLED installeren
+        run: |
+          arduino-cli config init --overwrite
+          arduino-cli config set board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install FastLED
+          pip install esptool
+
+      - name: Animaties bouwen en website maken
+        run: python3 hulpmiddelen/maak_site.py --uit _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publiceren:
+    needs: bouwen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

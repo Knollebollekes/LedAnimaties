@@ -29,7 +29,9 @@ wagens/<jaar>-<thema>/     één map per carnavalswagen
   <animatie>/              één map per animatie, .ino-naam = mapnaam
     <animatie>.ino  instellingen.h  paneel.h  voorbeeld.html
 hulpmiddelen/              compileren, simulator, testpatroon
-docs/UPLOADEN.md           uitleg Arduino IDE voor begeleiders
+hulpmiddelen/site/         de pagina van de website
+.github/workflows/         bouwt en publiceert de website bij elke push
+docs/UPLOADEN.md           uitleg uploaden (website en Arduino IDE)
 ```
 Elke animatiemap is **zelfstandig** (eigen kopie van `paneel.h` en
 `instellingen.h`), zodat een begeleider gewoon die map opent in de Arduino IDE.
@@ -91,8 +93,19 @@ de bedoeling is.
 - Animaties draaien eindeloos in `loop()`; geen `while(true)` zonder `wacht()`.
 - `HELDERHEID` niet verhogen zonder te vragen; let op de voeding.
 
+## De website ("zet op paneel")
+Bij elke push naar `main` bouwt GitHub Actions (`.github/workflows/website.yml`,
+script `hulpmiddelen/maak_site.py`) alle animaties en zet ze op
+https://knollebollekes.github.io/LedAnimaties/ met per animatie een
+"Zet op ESP32"-knop (ESP Web Tools, alleen Chrome/Edge). Alles op `main` staat dus
+binnen een paar minuten live: daarom pas pushen na akkoord van de begeleider.
+Nieuwe animatiemappen in `voorbeelden/` of `wagens/<wagen>/` verschijnen vanzelf;
+de groepsnaam komt uit de eerste `# kop` van `wagens/<wagen>/README.md`.
+Lokaal testen: `python3 hulpmiddelen/maak_site.py --uit <map>`.
+Vertel na een push dat het over een paar minuten op de website staat.
+
 ## Wat de begeleider zelf doet
-Uploaden naar de ESP32 gaat via de Arduino IDE op hun computer (zie
-`docs/UPLOADEN.md`). Claude kan niet uploaden. Vraag na het uploaden hoe het er
+Uploaden naar de ESP32 doet de begeleider (of een kind met de begeleider) via de
+website, of via de Arduino IDE (zie `docs/UPLOADEN.md`). Claude kan niet uploaden. Vraag na het uploaden hoe het er
 op het echte paneel uitziet; kleuren en helderheid kunnen afwijken van het
 voorbeeld.
