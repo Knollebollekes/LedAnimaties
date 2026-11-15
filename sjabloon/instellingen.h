@@ -12,14 +12,14 @@
 #define KLEURVOLGORDE   GRB      // klopt rood/groen niet? probeer RGB
 
 // --- Hoeveel panelen? ----------------------------------------
-#define PANEEL_GROOTTE  12       // een paneel is 12 x 12 ledjes
+#define PANEEL_GROOTTE  16       // een paneel is 16 x 16 ledjes
 #define PANELEN_BREED   1        // hoeveel panelen naast elkaar
 #define PANELEN_HOOG    1        // hoeveel panelen onder elkaar
 
 // --- Hoe lopen de ledjes BINNEN een paneel? -----------------
 // Waar zit het eerste ledje (waar de draad binnenkomt)?
 //   0 = linksboven   1 = rechtsboven   2 = linksonder   3 = rechtsonder
-#define EERSTE_LED_HOEK   0
+#define EERSTE_LED_HOEK   1
 // true  = de ledjes lopen in rijen (van links naar rechts)
 // false = de ledjes lopen in kolommen (van boven naar beneden)
 #define RIJEN_HORIZONTAAL true

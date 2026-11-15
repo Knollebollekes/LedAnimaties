@@ -44,7 +44,7 @@ zodat je ze kunt bekijken zonder paneel.
 - De website wordt automatisch gebouwd door GitHub (`.github/workflows/website.yml`)
   bij elke wijziging op `main`. Alles op `main` komt dus binnen een paar minuten op de site.
 - Handmatig uploaden met de Arduino IDE kan ook: zie [docs/UPLOADEN.md](docs/UPLOADEN.md).
-- Hardware: ESP32 met WS2812B-panelen van 12×12 ledjes, ook meerdere aan elkaar.
+- Hardware: ESP32 met WS2812B-panelen van 16×16 ledjes, ook meerdere aan elkaar.
 - Hoe de panelen zijn aangesloten staat in `instellingen.h`. Klopt het beeld niet,
   upload dan eerst `hulpmiddelen/testpatroon`.
 - Deze repo is openbaar: gebruik alleen voornamen of groepsnamen van kinderen.

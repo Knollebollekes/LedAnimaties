@@ -1,6 +1,6 @@
 ---
 name: ledanimaties
-description: Werkwijze voor LED-animaties op 12x12 WS2812B-panelen met een ESP32 voor de carnavalswagen van Knollebollekes, samen met kinderen van ~11 jaar. Gebruik bij elk verzoek om een animatie te maken, aan te passen of te testen in de repo LedAnimaties, en bij het starten van een nieuw wagenproject.
+description: Werkwijze voor LED-animaties op 16x16 WS2812B-panelen met een ESP32 voor de carnavalswagen van Knollebollekes, samen met kinderen van ~11 jaar. Gebruik bij elk verzoek om een animatie te maken, aan te passen of te testen in de repo LedAnimaties, en bij het starten van een nieuw wagenproject.
 ---
 
 # LED-animaties voor de carnavalswagen

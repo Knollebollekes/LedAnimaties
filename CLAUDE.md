@@ -1,7 +1,7 @@
 # LedAnimaties — Knollebollekes
 
 LED-animaties voor de carnavalswagen, gemaakt samen met kinderen van ± 11 jaar.
-Hardware: ESP32 + WS2812B-panelen van 12x12, soms meerdere aan elkaar.
+Hardware: ESP32 + WS2812B-panelen van 16x16, soms meerdere aan elkaar.
 
 **Volg altijd de skill `ledanimaties`** (`.claude/skills/ledanimaties/SKILL.md`)
 voor de werkwijze: startvragen per wagen, mappenindeling, coderegels,
