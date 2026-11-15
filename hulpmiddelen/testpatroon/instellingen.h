@@ -19,7 +19,7 @@
 // --- Hoe lopen de ledjes BINNEN een paneel? -----------------
 // Waar zit het eerste ledje (waar de draad binnenkomt)?
 //   0 = linksboven   1 = rechtsboven   2 = linksonder   3 = rechtsonder
-#define EERSTE_LED_HOEK   1
+#define EERSTE_LED_HOEK   0
 // true  = de ledjes lopen in rijen (van links naar rechts)
 // false = de ledjes lopen in kolommen (van boven naar beneden)
 #define RIJEN_HORIZONTAAL true
