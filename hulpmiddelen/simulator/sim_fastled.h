@@ -15,6 +15,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
+#ifndef PI
+#define PI 3.14159265358979323846  // zoals in Arduino
+#endif
 #include <type_traits>
 
 typedef uint8_t byte;
