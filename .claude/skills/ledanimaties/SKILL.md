@@ -104,6 +104,44 @@ de groepsnaam komt uit de eerste `# kop` van `wagens/<wagen>/README.md`.
 Lokaal testen: `python3 hulpmiddelen/maak_site.py --uit <map>`.
 Vertel na een push dat het over een paar minuten op de website staat.
 
+## Als er iets misgaat: uitleg voor kinderen
+Elke fout of elk probleem (compileren, voorbeeld, website-bouw, uploaden, paneel
+doet raar) leg je in de chat uit zodat een kind van 11 het snapt. Nooit een
+kale foutmelding plakken. Altijd deze vorm:
+
+> **🔧 Oeps! [korte naam van het probleem]**
+> **Wat is er gebeurd?** Eén of twee zinnen, met een vergelijking uit het
+> dagelijks leven (recept, zin zonder punt, verkeerde stekker, ...).
+> **Wie lost het op?** "Ik los het zelf op" of "Hier hebben we jullie hulp bij nodig".
+> **Wat doen we nu?** Genummerde stapjes, elk één handeling die je kunt zien
+> of aanraken ("kijk of het lampje op de ESP32 brandt").
+> *Voor de begeleider:* één regel met de technische oorzaak (bv. de echte
+> foutmelding, regelnummer, pin).
+
+Regels:
+- Kalm en positief: fouten horen bij programmeren, ook echte programmeurs
+  maken ze de hele dag. Nooit de schuld bij een kind leggen.
+- Fout in code die Claude zelf schreef: zeg eerlijk "Ik had een foutje
+  gemaakt", los het op, test opnieuw en vertel daarna dat het gelukt is. Vraag
+  pas iets aan de kinderen als het echt aan de hardware ligt.
+- Eén probleem tegelijk; het meest waarschijnlijke eerst.
+- Vraag na de stapjes: "Lukt het nu? Wat zie je?"
+
+Vertalingen van veelvoorkomende fouten:
+| Wat er gebeurt | Uitleg voor kinderen | Oorzaak (voor begeleider) |
+|---|---|---|
+| `expected ';'` | Er mist een punt aan het eind van een zin. De computer weet niet waar de zin ophoudt. | puntkomma vergeten |
+| `was not declared in this scope` | De computer kent dat woord niet, net als een woord dat niet in het woordenboek staat. Vaak een typfout of een hoofdletter verkeerd. | onbekende naam / typfout / functie nog niet gedefinieerd |
+| `expected '}'` / haakjes | Een haakje is open blijven staan, zoals een deur die je vergeet dicht te doen. | accolades/haakjes niet in balans |
+| Website-bouw mislukt | De robot van GitHub die de animaties klaarzet, liep ergens op vast. | Actions-run mislukt; kijk naar de stap |
+| ESP32 staat niet in het lijstje | De computer ziet de ESP32 niet. Soms is de kabel alleen een oplaadkabel, zonder "praatdraadjes". | kabel, driver (CP210x/CH340), Chrome/Edge |
+| Blijft hangen bij verbinden | De ESP32 luistert niet. Houd het knopje BOOT ingedrukt, dan luistert hij wel. | BOOT-knop bij flashen |
+| Paneel blijft donker | De ledjes krijgen geen bericht of geen stroom. Net als een lamp waar de stekker niet in zit. | DIN-kant, pin 14, gedeelde GND, 5V-voeding |
+| Verkeerde kleuren (rood is groen) | De ledjes lezen de kleuren in een andere volgorde, alsof ze de kleuren door elkaar halen. | `KLEURVOLGORDE` GRB ↔ RGB |
+| Beeld gespiegeld of door elkaar | Het paneel denkt dat de ledjes anders lopen dan ze echt lopen. | bedrading-instellingen; testpatroon |
+| Flikkeren / willekeurige kleurtjes | Het bericht naar de ledjes komt rommelig aan, alsof iemand door de telefoon kraakt. | gedeelde GND, weerstand, kabel te lang |
+| ESP32 herstart of wordt dimmer bij wit | De ledjes willen meer stroom dan de voeding kan geven. Ze hebben honger! | voeding te zwak, `HELDERHEID`/`MAX_MILLIAMPERE` |
+
 ## Wat de begeleider zelf doet
 Uploaden naar de ESP32 doet de begeleider (of een kind met de begeleider) via de
 website, of via de Arduino IDE (zie `docs/UPLOADEN.md`). Claude kan niet uploaden. Vraag na het uploaden hoe het er
