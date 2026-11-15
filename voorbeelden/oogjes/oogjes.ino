@@ -12,13 +12,17 @@ CRGB PUPIL  = CRGB::Black;         // het zwarte puntje in het midden
 CRGB OOGLID = CRGB(255, 140, 90);  // huidskleur van het ooglid
 
 // ---- Waar staan de ogen? -----------------------------------
-const int OOG_GROOTTE = 5;                 // een oog is 5 x 5 ledjes
-const int LINKS_X  = BREEDTE / 2 - 6;      // linkeroog
-const int RECHTS_X = BREEDTE / 2 + 1;      // rechteroog
-const int OGEN_Y   = HOOGTE / 2 - 3;       // hoogte van de ogen
+// De ogen worden vanzelf zo groot als past: op een 16x16-paneel
+// is een oog 7 x 7 ledjes, op een 12x12-paneel 5 x 5.
+const int OOG_GROOTTE   = BREEDTE / 2 - 1;
+const int IRIS_GROOTTE  = OOG_GROOTTE - 2;     // het gekleurde rondje
+const int PUPIL_GROOTTE = IRIS_GROOTTE - 2;    // het zwarte puntje
+const int LINKS_X  = BREEDTE / 2 - 1 - OOG_GROOTTE;   // linkeroog
+const int RECHTS_X = BREEDTE / 2 + 1;                 // rechteroog
+const int OGEN_Y   = (HOOGTE - OOG_GROOTTE) / 2;      // hoogte van de ogen
 
 // ---- Snelheid ------------------------------------------------
-const int KNIPPER_SNELHEID = 25;   // hoe snel het ooglid beweegt (kleiner = sneller)
+const int KNIPPER_SNELHEID = 20;   // hoe snel het ooglid beweegt (kleiner = sneller)
 
 // Hoort dit plekje bij het oog? De hoekjes laten we weg,
 // dan ziet het oog er rond uit.
@@ -46,13 +50,21 @@ void tekenOog(int oogX, int oogY, int kijkX, int kijkY, int dicht) {
     for (int x = 0; x < OOG_GROOTTE; x++)
       kleurOog(oogX, oogY, x, y, OOGWIT);
 
-  // 2. de iris (3 x 3) met de pupil in het midden
+  // 2. de iris met de pupil in het midden.
+  //    De hoekjes van de iris laten we weg, dan is hij rond.
   int irisX = 1 + kijkX;
   int irisY = 1 + kijkY;
-  for (int y = 0; y < 3; y++)
-    for (int x = 0; x < 3; x++)
-      kleurOog(oogX, oogY, irisX + x, irisY + y, IRIS);
-  kleurOog(oogX, oogY, irisX + 1, irisY + 1, PUPIL);
+  for (int y = 0; y < IRIS_GROOTTE; y++)
+    for (int x = 0; x < IRIS_GROOTTE; x++) {
+      bool hoekje = (x == 0 || x == IRIS_GROOTTE - 1) && (y == 0 || y == IRIS_GROOTTE - 1);
+      if (!hoekje || IRIS_GROOTTE <= 3) kleurOog(oogX, oogY, irisX + x, irisY + y, IRIS);
+    }
+  // De pupil heeft ook geen hoekjes, dan wordt hij een rondje
+  for (int y = 0; y < PUPIL_GROOTTE; y++)
+    for (int x = 0; x < PUPIL_GROOTTE; x++) {
+      bool hoekje = (x == 0 || x == PUPIL_GROOTTE - 1) && (y == 0 || y == PUPIL_GROOTTE - 1);
+      if (!hoekje || PUPIL_GROOTTE <= 1) kleurOog(oogX, oogY, irisX + 1 + x, irisY + 1 + y, PUPIL);
+    }
 
   // 3. het ooglid zakt van boven naar beneden
   for (int y = 0; y < dicht; y++)
