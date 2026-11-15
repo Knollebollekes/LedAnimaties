@@ -53,7 +53,7 @@ Dan is één klik op *Fetch/Pull* genoeg om de nieuwste animaties te krijgen.)
 
 ## Aansluiten van de panelen
 
-- **Datadraad** (DIN van het eerste paneel) → pin **5** van de ESP32 (zie `DATA_PIN` in `instellingen.h`).
+- **Datadraad** (DIN van het eerste paneel) → pin **14** van de ESP32 (op het bordje D14, G14 of IO14; zie `DATA_PIN` in `instellingen.h`).
 - **Min (GND)** van de panelen → GND van de ESP32 **én** min van de voeding. Gezamenlijke min is belangrijk!
 - **Plus (5V)** van de panelen → plus van een **aparte 5V-voeding**, niet via de ESP32.
   Eén paneel kan op vol wit tot ~8 ampère trekken; met `HELDERHEID` 40 is het veel minder.

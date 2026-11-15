@@ -43,7 +43,7 @@ Vraag (liefst met AskUserQuestion, in kindvriendelijke woorden) en leg vast in
 `wagens/<jaar>-<thema>/instellingen.h` + een korte `README.md` in die map:
 1. Thema van de wagen en het jaar.
 2. Hoeveel panelen, en hoe naast/onder elkaar? → `PANELEN_BREED`, `PANELEN_HOOG`
-3. Op welke pin zit de datadraad? (standaard 5) → `DATA_PIN`
+3. Op welke pin zit de datadraad? (standaard 14) → `DATA_PIN`
 4. Bedrading binnen een paneel: waar komt de draad binnen, lopen de ledjes in
    rijen of kolommen, slangetje of niet? → `EERSTE_LED_HOEK`, `RIJEN_HORIZONTAAL`, `SLANG`
 5. Hoe loopt de draad van paneel naar paneel? → `PANELEN_ZIGZAG`

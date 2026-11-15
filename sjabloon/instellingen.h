@@ -7,7 +7,7 @@
 #pragma once
 
 // --- Aansluiting ---------------------------------------------
-#define DATA_PIN        5        // op welke pin van de ESP32 zit de datadraad?
+#define DATA_PIN        14       // op welke pin van de ESP32 zit de datadraad?
 #define LED_TYPE        WS2812B  // soort ledjes
 #define KLEURVOLGORDE   GRB      // klopt rood/groen niet? probeer RGB
 
