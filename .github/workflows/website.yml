@@ -35,6 +35,15 @@ jobs:
           path: ~/.arduino15
           key: arduino-esp32-${{ runner.os }}-v1
 
+      # Bewaar het al gecompileerde ESP32-basisdeel tussen keren bouwen,
+      # dan hoeft alleen de animatie zelf opnieuw (scheelt minuten).
+      - name: Eerder gecompileerde stukken terugzetten
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/arduino
+          key: arduino-bouwcache-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: arduino-bouwcache-${{ runner.os }}-
+
       - name: ESP32-boards en FastLED installeren
         run: |
           arduino-cli config init --overwrite
