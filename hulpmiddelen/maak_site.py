@@ -29,6 +29,7 @@ import re
 import shutil
 import subprocess
 import datetime
+import time
 import sys
 import tempfile
 
@@ -168,7 +169,9 @@ def main():
         }
         print(f"→ {rel}", flush=True)
 
+        t0 = time.time()
         ok, melding = compileer(cli, schets, uit / "firmware" / f"{ident}.bin")
+        print(f"   compileren: {time.time() - t0:.0f} s", flush=True)
         item["ok"] = ok
         if ok:
             manifest = {
@@ -185,7 +188,9 @@ def main():
             print(f"::warning title=Compileert niet::{rel}: {melding.splitlines()[0] if melding else ''}")
 
         try:
+            t0 = time.time()
             data = simuleer(schets, int(a.duur * 1000))
+            print(f"   voorbeeld maken: {time.time() - t0:.0f} s", flush=True)
             (uit / "data" / f"{ident}.json").write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
             item["voorbeeld"] = True
         except SystemExit as e:
