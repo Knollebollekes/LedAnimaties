@@ -72,6 +72,14 @@
   details pre { white-space: pre-wrap; font-size: .75rem; color: var(--zacht); background: #0005;
                 padding: 8px; border-radius: 8px; max-height: 160px; overflow: auto; }
 
+  .status { border-radius: 14px; padding: 12px 18px; margin: 20px 0 0; background: var(--nacht2);
+            border: 1px solid var(--lijn); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .status .stip { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--groen); }
+  .status.bezig { border-color: var(--geel); background: #2f2614; }
+  .status.bezig .stip { background: var(--geel); animation: knipper 1s infinite; }
+  .status small { color: var(--zacht); }
+  @keyframes knipper { 50% { opacity: .25; } }
+
   footer { text-align: center; color: var(--zacht); font-size: .85rem; padding: 0 16px 40px; }
   footer a { color: var(--blauw); }
 </style>
@@ -85,6 +93,7 @@
     Kies een animatie en zet hem met één klik op het paneel!</p>
 </header>
 <main>
+  <div class="status" id="status" hidden><span class="stip"></span><span id="statusTekst"></span></div>
   <div class="stappen">
     <div class="stap"><div class="nr">1</div><div><b>Sluit de ESP32 aan</b><small>met een USB-kabel op deze computer</small></div></div>
     <div class="stap"><div class="nr">2</div><div><b>Klik op "Zet op ESP32"</b><small>bij de animatie die je wilt</small></div></div>
@@ -171,7 +180,7 @@ function maakKaart(a) {
   const canvas = el('canvas', { 'aria-label': 'Voorbeeld van ' + a.titel });
   const acties = el('div', { class: 'acties' });
   if (a.ok) {
-    const knop = el('esp-web-install-button', { manifest: `firmware/${a.id}.json` });
+    const knop = el('esp-web-install-button', { manifest: `firmware/${a.id}.json?v=${VERSIE}` });
     knop.append(el('button', { class: 'knop', slot: 'activate', text: 'Zet op ESP32' }));
     knop.append(el('button', { class: 'knop', slot: 'unsupported', disabled: '', text: 'Alleen in Chrome/Edge' }));
     knop.append(el('button', { class: 'knop', slot: 'not-allowed', disabled: '', text: 'Alleen via https' }));
@@ -191,11 +200,58 @@ function maakKaart(a) {
       a.wat ? el('p', { class: 'wat', text: a.wat }) : null,
       a.door ? el('p', { class: 'door', text: 'Bedacht door ' + a.door }) : null,
       fout, acties));
-  if (a.voorbeeld) fetch(`data/${a.id}.json`).then(r => r.json()).then(D => maakSpeler(canvas, D));
+  if (a.voorbeeld) fetch(`data/${a.id}.json?v=${VERSIE}`).then(r => r.json()).then(D => maakSpeler(canvas, D));
   return kaart;
 }
 
-fetch('animaties.json').then(r => r.json()).then(info => {
+let VERSIE = '';
+
+// ---- Wanneer is de site bijgewerkt, en komt er een nieuwe versie aan? ----
+function tijdNL(iso) {
+  return new Date(iso).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam',
+    weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+function toonStatus(bezig, tekst, klein) {
+  const st = document.getElementById('status');
+  st.hidden = false;
+  st.classList.toggle('bezig', bezig);
+  const t = document.getElementById('statusTekst');
+  t.textContent = '';
+  t.append(el('b', { text: tekst }));
+  if (klein) t.append(' ', el('small', { text: klein }));
+}
+function toonBijgewerkt(info) {
+  if (!info.gebouwd) return;
+  toonStatus(false, 'Bijgewerkt op ' + tijdNL(info.gebouwd), info.wijziging ? '· ' + info.wijziging : '');
+}
+// Vraag aan GitHub of er nu een nieuwe versie gebouwd wordt.
+async function kijkOfErIetsAankomt(info) {
+  try {
+    const r = await fetch(`https://api.github.com/repos/${info.repo}/actions/runs?branch=main&per_page=1`, { cache: 'no-store' });
+    if (!r.ok) return;
+    const run = (await r.json()).workflow_runs?.[0];
+    if (!run) return;
+    const nieuw = !run.head_sha.startsWith(info.versie);
+    if (run.status !== 'completed' && nieuw) {
+      toonStatus(true, 'Er komt een nieuwe versie aan…',
+        `gestart om ${tijdNL(run.created_at).split(' ').pop()}, duurt een paar minuten. Deze pagina ververst vanzelf.`);
+      setTimeout(() => kijkOfErIetsAankomt(info), 30000);
+    } else if (run.status === 'completed' && run.conclusion === 'success' && nieuw) {
+      // de nieuwe versie is klaar: haal hem op (GitHub heeft soms nog een minuutje nodig)
+      const vers = await fetch('animaties.json', { cache: 'no-store' }).then(r => r.json());
+      if (vers.versie !== info.versie) location.reload();
+      else { toonStatus(true, 'Nieuwe versie bijna klaar…', 'nog heel even geduld.'); setTimeout(() => kijkOfErIetsAankomt(info), 20000); }
+    } else {
+      toonBijgewerkt(info);
+      setTimeout(() => kijkOfErIetsAankomt(info), 120000);
+    }
+  } catch (e) { /* geen internet of GitHub zegt even nee: niet erg */ }
+}
+
+fetch('animaties.json', { cache: 'no-store' }).then(r => r.json()).then(info => {
+  VERSIE = info.versie;
+  toonBijgewerkt(info);
+  kijkOfErIetsAankomt(info);
   const lijst = document.getElementById('lijst');
   lijst.innerHTML = '';
   const groepen = new Map();

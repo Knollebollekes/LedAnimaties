@@ -28,6 +28,7 @@ import pathlib
 import re
 import shutil
 import subprocess
+import datetime
 import sys
 import tempfile
 
@@ -147,6 +148,11 @@ def main():
     repo_naam = os.environ.get("GITHUB_REPOSITORY", "Knollebollekes/LedAnimaties")
     versie = os.environ.get("GITHUB_SHA", "lokaal")[:7]
     lijst, kapot = [], 0
+    # Wanneer is deze versie gemaakt, en wat was de laatste wijziging?
+    # (de website laat dat bovenaan zien)
+    gebouwd = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
+    r = subprocess.run(["git", "-C", str(REPO), "log", "-1", "--format=%s"], capture_output=True, text=True)
+    wijziging = r.stdout.strip() if r.returncode == 0 else ""
 
     for groep, schets in vind_schetsen():
         rel = schets.relative_to(REPO).as_posix()
@@ -170,7 +176,7 @@ def main():
                 "version": versie,
                 "new_install_prompt_erase": False,
                 "new_install_improv_wait_time": 0,
-                "builds": [{"chipFamily": "ESP32", "parts": [{"path": f"{ident}.bin", "offset": 0}]}],
+                "builds": [{"chipFamily": "ESP32", "parts": [{"path": f"{ident}.bin?v={versie}", "offset": 0}]}],
             }
             (uit / "firmware" / f"{ident}.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
         else:
@@ -188,7 +194,7 @@ def main():
         lijst.append(item)
 
     (uit / "animaties.json").write_text(
-        json.dumps({"versie": versie, "repo": repo_naam, "animaties": lijst}, ensure_ascii=False, indent=1),
+        json.dumps({"versie": versie, "repo": repo_naam, "gebouwd": gebouwd, "wijziging": wijziging, "animaties": lijst}, ensure_ascii=False, indent=1),
         encoding="utf-8",
     )
     print(f"Klaar: {len(lijst)} animaties, {kapot} kapot → {uit}")
