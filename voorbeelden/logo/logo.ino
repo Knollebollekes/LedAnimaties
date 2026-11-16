@@ -1,32 +1,33 @@
 // ============================================================
 //  LOGO
 //  Bedacht door: de begeleiders
-//  Wat doet het: het Knollebolleke van C.V. Knollebollekes in
-//                lampjes; hij knipoogt en de belletjes glinsteren
+//  Wat doet het: het Knollebolleke (een voederbiet met narrenmuts)
+//                in lampjes; hij knipoogt en de belletjes glinsteren
 // ============================================================
 #include "paneel.h"
 
 // ---- Het plaatje: elk teken is één lampje -------------------
 //  G = blad   g = donker blad   P = paarse muts   Y = belletje
-//  O = oranje rand   C = knol (gezicht)   W = oogwit   I = oog
-//  M = donkere mond  R = tong   . = achtergrond (blauw, gele ring)
+//  O = oranje rand   C = biet (gezicht)   D = schaduw van de biet
+//  W = oogwit   I = oog
+//  M = donkere mond  R = tong   . = achtergrond
 const char* PLAATJE[16] = {
-  "...GG.......GG..",
-  "..GGGG.PP..GGGG.",
-  ".GGgG.PPPP.GgGG.",
-  ".GGGGPPPPPPGGGG.",
-  "..Y.PPPPPPPP.Y..",
-  "...OOOOOOOOOO...",
-  "...OOOOOOOOOO...",
-  "...CCCCCCCCCC...",
-  "..CCWWCCCCWWCC..",
-  "..CCWICCCCWICC..",
-  "..CCCCCCCCCCCC..",
-  "..CCMWWWWWWMCC..",
-  "..CCCMRRRRMCCC..",
-  "...CCCMMMMCCC...",
-  "....CCCCCCCC....",
-  ".......CC.......",
+  "...GG..PP..GG...",
+  "..GGGG.PPP.GGG..",
+  ".GGgGPPPPPPGgGG.",
+  "..GGPPPPPPPPGG..",
+  "..Y.OOOOOOOO.Y..",
+  "...CCCCCCCCCD...",
+  "..CCWWCCCCWWCD..",
+  "..CCWICCCCWICD..",
+  "..CCCCCCCCCCCD..",
+  "..CCMWWWWWWMCD..",
+  "...CCMRRRRMCD...",
+  "...CCCMMMMCDD...",
+  "....CCCCCCDD....",
+  ".....CCCCDD.....",
+  "......CCD.......",
+  "........D.......",
 };
 
 // ---- Kleuren: verander ze maar! -----------------------------
@@ -40,10 +41,12 @@ CRGB MUTS        = CRGB(100, 40, 170);
 CRGB BELLETJE    = CRGB(255, 210, 0);
 CRGB RAND        = CRGB(255, 40, 0);     // roder, zodat hij afsteekt tegen de knol
 CRGB KNOL        = CRGB(255, 120, 35);   // huidskleur op de ledjes
+CRGB SCHADUW     = CRGB(170, 60, 10);    // de rechterkant, dan lijkt hij rond
 CRGB OOGWIT      = CRGB(200, 200, 200);
 CRGB OOG         = CRGB(30, 90, 220);
 CRGB MOND        = CRGB(90, 0, 10);
 CRGB TONG        = CRGB(230, 30, 40);
+const bool MET_RING = false;            // true = blauwe cirkel met gele ring, zoals het logo
 CRGB ACHTERGROND = CRGB(20, 120, 210);   // blauw zoals in het logo
 CRGB RING        = CRGB(255, 210, 0);    // gele ring eromheen
 
@@ -67,12 +70,14 @@ CRGB kleurVan(char c, int x, int y) {
     case 'Y': return BELLETJE;
     case 'O': return RAND;
     case 'C': return KNOL;
+    case 'D': return SCHADUW;
     case 'W': return OOGWIT;
     case 'I': return OOG;
     case 'M': return MOND;
     case 'R': return TONG;
   }
-  // achtergrond: blauwe cirkel met een gele ring, buiten de cirkel uit
+  // achtergrond: uit, of een blauwe cirkel met een gele ring
+  if (!MET_RING) return CRGB::Black;
   float afstand = sqrt((x - 7.5) * (x - 7.5) + (y - 7.5) * (y - 7.5));
   if (afstand > 7.9) return CRGB::Black;
   if (afstand > 6.8) return RING;
@@ -85,9 +90,9 @@ void tekenPlaatje(bool ogenDicht) {
       char c = PLAATJE[y][x];
       CRGB k = kleurVan(c, x, y);
       // ogen dicht: oogwit en oog worden knol, met een donker streepje
-      bool oog = (c == 'W' || c == 'I') && (y == 8 || y == 9);
+      bool oog = (c == 'W' || c == 'I') && (y == 6 || y == 7);
       bool ditOog = !alleenRechts || x >= 8;
-      if (ogenDicht && oog && ditOog) k = (y == 9) ? MOND : KNOL;
+      if (ogenDicht && oog && ditOog) k = (y == 7) ? MOND : KNOL;
       // de belletjes glinsteren
       if (c == 'Y') k.nscale8(150 + sin8(millis() / 4 + x * 60) * 105 / 255);
       k.nscale8(FELHEID);
