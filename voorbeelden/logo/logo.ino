@@ -30,13 +30,17 @@ const char* PLAATJE[16] = {
 };
 
 // ---- Kleuren: verander ze maar! -----------------------------
+// Let op: op ledjes ziet lichtgeel/crème er wit uit. Daarom is de knol hier
+// veel oranjer dan op het scherm van de computer. Op de ledjes is het huidskleur.
+const int FELHEID = 110;   // 255 = zo fel mogelijk, 110 = rustig, kleiner = nog zachter
+
 CRGB BLAD        = CRGB(20, 170, 40);
 CRGB DONKER_BLAD = CRGB(0, 90, 20);
 CRGB MUTS        = CRGB(100, 40, 170);
 CRGB BELLETJE    = CRGB(255, 210, 0);
-CRGB RAND        = CRGB(255, 90, 0);
-CRGB KNOL        = CRGB(255, 225, 140);
-CRGB OOGWIT      = CRGB(255, 255, 255);
+CRGB RAND        = CRGB(255, 40, 0);     // roder, zodat hij afsteekt tegen de knol
+CRGB KNOL        = CRGB(255, 120, 35);   // huidskleur op de ledjes
+CRGB OOGWIT      = CRGB(200, 200, 200);
 CRGB OOG         = CRGB(30, 90, 220);
 CRGB MOND        = CRGB(90, 0, 10);
 CRGB TONG        = CRGB(230, 30, 40);
@@ -86,6 +90,7 @@ void tekenPlaatje(bool ogenDicht) {
       if (ogenDicht && oog && ditOog) k = (y == 9) ? MOND : KNOL;
       // de belletjes glinsteren
       if (c == 'Y') k.nscale8(150 + sin8(millis() / 4 + x * 60) * 105 / 255);
+      k.nscale8(FELHEID);
       zetPixel(LINKS + x, BOVEN + y, k);
     }
   }
