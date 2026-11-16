@@ -30,6 +30,8 @@ import shutil
 import subprocess
 import datetime
 import time
+import hashlib
+import os
 import sys
 import tempfile
 
@@ -132,6 +134,58 @@ def compileer(cli: str, schets: pathlib.Path, doel_bin: pathlib.Path) -> tuple[b
         return True, samenvatting
 
 
+# ---- Opslag van al gebouwde firmware --------------------------------------
+# Een animatie die niet veranderd is, hoeft niet opnieuw gecompileerd te
+# worden. We maken een "vingerafdruk" van alle bestanden in de map (plus de
+# versies van het gereedschap). Staat er al firmware met die vingerafdruk in
+# de opslag, dan gebruiken we die.
+OPSLAG = pathlib.Path(os.environ.get("LED_FIRMWARE_OPSLAG",
+                                     pathlib.Path.home() / ".cache" / "ledanimaties-firmware"))
+
+
+def gereedschap_versie(cli: str) -> str:
+    stukken = [FQBN]
+    for args in (["core", "list"], ["lib", "list"]):
+        r = subprocess.run([cli, *args], capture_output=True, text=True)
+        stukken.append(r.stdout)
+    if (HULP / "libraries").exists():   # lokaal: FastLED-map van installeer_hulpmiddelen.sh
+        stukken.append(" ".join(sorted(x.name for x in (HULP / "libraries").iterdir())))
+    return "\n".join(stukken)
+
+
+def vingerafdruk(schets: pathlib.Path, gereedschap: str) -> str:
+    h = hashlib.sha256(gereedschap.encode())
+    for f in sorted(schets.rglob("*")):
+        if f.is_file() and f.name != "voorbeeld.html":
+            h.update(str(f.relative_to(schets)).encode())
+            h.update(f.read_bytes())
+    return h.hexdigest()[:20]
+
+
+def compileer_of_uit_opslag(cli, schets, doel_bin, gereedschap, gebruikt):
+    afdruk = vingerafdruk(schets, gereedschap)
+    gebruikt.add(afdruk)
+    bin_opslag, txt_opslag = OPSLAG / f"{afdruk}.bin", OPSLAG / f"{afdruk}.txt"
+    if bin_opslag.exists():
+        shutil.copy(bin_opslag, doel_bin)
+        return True, (txt_opslag.read_text() if txt_opslag.exists() else ""), True
+    ok, melding = compileer(cli, schets, doel_bin)
+    if ok:
+        OPSLAG.mkdir(parents=True, exist_ok=True)
+        shutil.copy(doel_bin, bin_opslag)
+        txt_opslag.write_text(melding)
+    return ok, melding, False
+
+
+def ruim_opslag_op(gebruikt):
+    """Gooi firmware weg die bij geen enkele huidige animatie meer hoort."""
+    if not OPSLAG.exists():
+        return
+    for f in OPSLAG.iterdir():
+        if f.stem not in gebruikt:
+            f.unlink()
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--uit", type=pathlib.Path, default=REPO / "_site")
@@ -146,6 +200,8 @@ def main():
     (uit / "data").mkdir()
 
     cli = zoek_arduino_cli()
+    gereedschap = gereedschap_versie(cli)
+    gebruikt: set[str] = set()
     repo_naam = os.environ.get("GITHUB_REPOSITORY", "Knollebollekes/LedAnimaties")
     versie = os.environ.get("GITHUB_SHA", "lokaal")[:7]
     lijst, kapot = [], 0
@@ -170,8 +226,12 @@ def main():
         print(f"→ {rel}", flush=True)
 
         t0 = time.time()
-        ok, melding = compileer(cli, schets, uit / "firmware" / f"{ident}.bin")
-        print(f"   compileren: {time.time() - t0:.0f} s", flush=True)
+        ok, melding, uit_opslag = compileer_of_uit_opslag(
+            cli, schets, uit / "firmware" / f"{ident}.bin", gereedschap, gebruikt)
+        if uit_opslag:
+            print("   niet veranderd: firmware uit de opslag", flush=True)
+        else:
+            print(f"   compileren: {time.time() - t0:.0f} s", flush=True)
         item["ok"] = ok
         if ok:
             manifest = {
@@ -202,6 +262,7 @@ def main():
         json.dumps({"versie": versie, "repo": repo_naam, "gebouwd": gebouwd, "wijziging": wijziging, "animaties": lijst}, ensure_ascii=False, indent=1),
         encoding="utf-8",
     )
+    ruim_opslag_op(gebruikt)
     print(f"Klaar: {len(lijst)} animaties, {kapot} kapot → {uit}")
 
 

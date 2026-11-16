@@ -53,6 +53,15 @@ jobs:
           arduino-cli lib install FastLED@3.7.8   # zelfde versie als installeer_hulpmiddelen.sh; nieuwere compileren veel trager
           pip install esptool
 
+      # Firmware van animaties die niet veranderd zijn, hoeft niet opnieuw
+      # gecompileerd te worden (zie maak_site.py, "vingerafdruk").
+      - name: Al gebouwde animaties terugzetten
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ledanimaties-firmware
+          key: led-firmware-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: led-firmware-${{ runner.os }}-
+
       - name: Animaties bouwen en website maken
         run: python3 hulpmiddelen/maak_site.py --uit _site
 
