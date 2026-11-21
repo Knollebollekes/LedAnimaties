@@ -137,6 +137,15 @@ void setup() {
   startPanelen();
   // de koelkaart meteen vullen, anders schiet de eerste warmte ongeremd naar boven
   for (int i = 0; i < HOOGTE; i++) schuifKoelkaart();
+  // het vuur alvast een tijdje laten branden (zonder te tekenen),
+  // zodat de vlam meteen in volle hoogte op het scherm staat
+  for (int i = 0; i < HOOGTE * 4; i++) {
+    beweegWiebel();
+    schuifKoelkaart();
+    koelAf();
+    stijgOp();
+    stookOp();
+  }
 }
 
 void loop() {
