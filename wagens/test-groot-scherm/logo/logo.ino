@@ -51,7 +51,7 @@ const char* PLAATJE[32] = {
 // ---- Kleuren voor op de ledjes ------------------------------
 // Ledjes laten lichte kleuren witter zien dan een computerscherm.
 // Daarom zijn deze kleuren "voller" gemaakt dan in het plaatje.
-const int FELHEID = 110;   // 255 = zo fel mogelijk, kleiner = zachter
+const int FELHEID = 75;    // 255 = zo fel mogelijk, kleiner = zachter
 CRGB PAARS       = CRGB(70, 12, 170);
 CRGB GEEL        = CRGB(220, 140, 0);
 CRGB BLAUW       = CRGB(0, 60, 200);
