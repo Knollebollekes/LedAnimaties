@@ -262,8 +262,14 @@ def main():
         json.dumps({"versie": versie, "repo": repo_naam, "gebouwd": gebouwd, "wijziging": wijziging, "animaties": lijst}, ensure_ascii=False, indent=1),
         encoding="utf-8",
     )
-    ruim_opslag_op(gebruikt)
     print(f"Klaar: {len(lijst)} animaties, {kapot} kapot → {uit}")
+    if lijst and kapot == len(lijst):
+        # Alles kapot ligt nooit aan de animaties zelf, maar aan het gereedschap.
+        # Stop dan, zodat de oude (werkende) website online blijft.
+        print("::error::Alle animaties kapot: de website wordt NIET bijgewerkt. "
+              "Waarschijnlijk is het ESP32-gereedschap of FastLED veranderd.")
+        sys.exit(1)
+    ruim_opslag_op(gebruikt)
 
 
 if __name__ == "__main__":

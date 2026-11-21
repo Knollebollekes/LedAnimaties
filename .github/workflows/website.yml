@@ -49,7 +49,7 @@ jobs:
           arduino-cli config init --overwrite
           arduino-cli config set board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
           arduino-cli core update-index
-          arduino-cli core install esp32:esp32
+          arduino-cli core install esp32:esp32@3.3.12   # vast: 4.x werkt niet met FastLED 3.7.8 (driver/rmt.h is weg)
           arduino-cli lib install FastLED@3.7.8   # zelfde versie als installeer_hulpmiddelen.sh; nieuwere compileren veel trager
           pip install esptool
 
