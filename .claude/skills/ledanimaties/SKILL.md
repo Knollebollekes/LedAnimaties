@@ -92,6 +92,15 @@ de bedoeling is.
 - Posities liefst relatief aan `BREEDTE`/`HOOGTE`, zodat het ook op meer panelen werkt.
 - Animaties draaien eindeloos in `loop()`; geen `while(true)` zonder `wacht()`.
 - `HELDERHEID` niet verhogen zonder te vragen; let op de voeding.
+- **Kleuren op de ledjes** (getest op de echte panelen):
+  - Ledjes laten lichte kleuren veel witter zien dan een computerscherm. Maak
+    kleuren daarom vol: weinig blauw in warme kleuren. Huidskleur / crème
+    = ongeveer `CRGB(255, 120, 35)`, niet `(255, 225, 140)` (dat wordt wit).
+  - Zet in elke animatie bovenaan `const int FELHEID = 75;` en schaal alle
+    kleuren daarmee (`k.nscale8(FELHEID)`). 75 is binnen prettig; buiten mag
+    het hoger. Zo is felheid per animatie één getal om te tweaken.
+  - Het browser-voorbeeld ziet er daardoor donkerder en oranjer uit dan op de
+    ledjes; zeg dat erbij als je het voorbeeld stuurt.
 
 ## De website ("zet op paneel")
 Bij elke push naar `main` bouwt GitHub Actions (`.github/workflows/website.yml`,
