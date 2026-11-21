@@ -91,6 +91,21 @@ de bedoeling is.
   Heb je meer nodig, voeg het eerst toe aan `sim_fastled.h`.
 - Posities liefst relatief aan `BREEDTE`/`HOOGTE`, zodat het ook op meer panelen werkt.
 - Animaties draaien eindeloos in `loop()`; geen `while(true)` zonder `wacht()`.
+- **Klaar voor de master** (later combineren we animaties per pop, met een
+  master-ESP32 die met knoppen een andere animatie laat starten). Volg daarom
+  de opbouw van `sjabloon/sjabloon.ino`:
+  - `beginAnimatie()` zet álles op de beginstand (tijd, posities, deeltjes,
+    vuur dat alvast moet branden). Dit wordt later ook aangeroepen als de
+    master de animatie (opnieuw) start.
+  - `tekenBeeldje(tijd)` tekent precies één beeldje; `tijd` = ms sinds
+    `beginAnimatie()`. Reken met die tijd, niet met `millis()` vanaf 0.
+  - `loop()` doet alleen: `tekenBeeldje(millis() - beginTijd); toon(); wacht(...)`.
+    Geen eigen `for`-lussen met `wacht()` erin en geen `delay()`.
+  - `setup()` doet alleen `startPanelen(); beginAnimatie();`.
+  - Bij het combineren zet Claude elke animatie in een eigen `namespace`, dus
+    dezelfde namen (`meng`, `rond`, kleuren) in verschillende animaties mogen.
+  - Oudere animaties die nog niet zo zijn opgebouwd, worden omgebouwd zodra ze
+    in een pop of master/slave-programma komen.
 - `HELDERHEID` niet verhogen zonder te vragen; let op de voeding.
 - **Kleuren op de ledjes** (getest op de echte panelen):
   - Ledjes laten lichte kleuren veel witter zien dan een computerscherm. Maak
