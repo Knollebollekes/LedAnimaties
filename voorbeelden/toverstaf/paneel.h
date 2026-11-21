@@ -16,6 +16,11 @@
 
 #include "instellingen.h"
 
+// Oudere instellingen.h kennen deze nog niet: dan begint paneel 1 links.
+#ifndef PANELEN_VAN_RECHTS
+#define PANELEN_VAN_RECHTS false
+#endif
+
 // Hoe groot is het hele scherm (alle panelen samen)?
 #define BREEDTE   (PANEEL_GROOTTE * PANELEN_BREED)
 #define HOOGTE    (PANEEL_GROOTTE * PANELEN_HOOG)
@@ -34,6 +39,9 @@ int ledNummer(int x, int y) {
   int lx = x % P;
   int ly = y % P;
 
+  if (PANELEN_VAN_RECHTS) {            // elke rij panelen begint rechts
+    paneelKolom = PANELEN_BREED - 1 - paneelKolom;
+  }
   if (PANELEN_ZIGZAG && (paneelRij % 2 == 1)) {
     paneelKolom = PANELEN_BREED - 1 - paneelKolom;
   }

@@ -28,9 +28,12 @@
 #define SLANG             true
 
 // --- Hoe zijn de panelen aan ELKAAR gekoppeld? ---------------
-// Paneel 1 is linksboven, daarna gaat de draad naar rechts.
-// true  = de tweede rij panelen loopt terug van rechts naar links
-// false = elke rij panelen begint weer links
+// Waar zit paneel 1 (waar de draad het eerste paneel in gaat)?
+// false = paneel 1 is linksboven, de draad gaat naar rechts
+// true  = paneel 1 is rechtsboven, de draad gaat naar links
+#define PANELEN_VAN_RECHTS false
+// true  = de tweede rij panelen loopt de andere kant op terug (slangetje)
+// false = elke rij panelen begint weer aan dezelfde kant
 #define PANELEN_ZIGZAG    false
 
 // --- Veiligheid en stroom ------------------------------------
