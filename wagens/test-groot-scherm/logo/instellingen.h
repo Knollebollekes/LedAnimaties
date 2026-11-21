@@ -38,4 +38,4 @@
 
 // --- Veiligheid en stroom ------------------------------------
 #define HELDERHEID        40     // 0 t/m 255. Buiten is 40-80 al fel genoeg!
-#define MAX_MILLIAMPERE   3000   // wat de voeding mag leveren (5 volt)
+#define MAX_MILLIAMPERE   27000  // voeding levert 30 A; iets eronder voor de veiligheid
