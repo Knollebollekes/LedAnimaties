@@ -18,6 +18,9 @@
 #ifndef PI
 #define PI 3.14159265358979323846  // zoals in Arduino
 #endif
+#ifndef sq
+#define sq(x) ((x) * (x))  // kwadraat, zoals in Arduino
+#endif
 #include <type_traits>
 
 typedef uint8_t byte;
